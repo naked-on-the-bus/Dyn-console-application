@@ -1,0 +1,6 @@
+Dynamics:
+  AuthType: OAuth
+  Url: https://someCompany.crm4.dynamics.com
+  AppId: 51f81489-12ee-4a9e-aaae-a2591f45987d
+  RedirectUri: http://localhost
+  LoginPrompt: Auto

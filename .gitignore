@@ -1,0 +1,23 @@
+# -- Local config (contains credentials — never commit) ------------------------
+console-application/console/config.yaml
+
+# -- Generated constants (produced by generate-constants.ps1) ------------------
+console-application/console/Constants.cs
+console-application/console/Constants/
+
+# -- Runtime logs --------------------------------------------------------------
+console-application/console/logs/
+
+# -- Build output --------------------------------------------------------------
+console-application/console/bin/
+console-application/console/obj/
+
+[Oo]bj
+[Oo]ut
+[Bb]in
+
+.vs
+*.user
+
+
+

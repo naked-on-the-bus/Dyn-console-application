@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="console/console.csproj" />
+  <Folder Name="/scripts/">
+    <Project Path="scripts/RetrieveConstants/RetrieveConstants.csproj" />
+  </Folder>
+</Solution>
