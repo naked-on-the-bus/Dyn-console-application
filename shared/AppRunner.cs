@@ -23,8 +23,7 @@ public static class AppRunner
             dynamics["Url"]!,
             dynamics["AppId"]!,
             dynamics["RedirectUri"]!,
-            dynamics["LoginPrompt"]!,
-            dynamics["Authority"]!
+            dynamics["LoginPrompt"]!
         );
 
         // ── 3. Logging ────────────────────────────────────────────────────────────────

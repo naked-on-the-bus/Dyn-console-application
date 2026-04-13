@@ -1,7 +1,7 @@
 # generate-constants.ps1
 #
 # Connects to your Dynamics 365 / Dataverse environment and regenerates
-# Constants.cs in the project source directory.
+# entity constant classes in the constants/ folder.
 #
 # Run this script once when setting up, and again whenever your Dataverse
 # schema changes. Do NOT run it as part of normal program execution.
@@ -9,5 +9,8 @@
 # Usage:
 #   .\generate-constants.ps1
 
-$projectDir = Join-Path $PSScriptRoot "console"
-dotnet run --project $projectDir -- --scaffold
+$scriptRoot   = $PSScriptRoot
+$constantsDir = Join-Path $scriptRoot "constants"
+$projectDir   = Join-Path $scriptRoot "scripts" "RetrieveConstants"
+
+dotnet run --project $projectDir -- $constantsDir

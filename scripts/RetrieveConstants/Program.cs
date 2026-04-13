@@ -5,17 +5,18 @@ using Microsoft.Xrm.Sdk.Metadata;
 using Spectre.Console;
 using System.Text;
 
-// ── 1. Locate config.yaml in current directory ──────────────────────────────
-var configPath = Path.Combine(Directory.GetCurrentDirectory(), "config.yaml");
+// ── 1. Locate config.yaml at repo root ──────────────────────────────────────
+var repoRoot = FindRepoRoot(Directory.GetCurrentDirectory());
+var configPath = Path.Combine(repoRoot, "config.yaml");
 if (!File.Exists(configPath))
 {
-    AnsiConsole.MarkupLine("[bold red]✗ config.yaml not found in current directory.[/]");
-    AnsiConsole.MarkupLine("[grey]Run this tool from the folder that contains config.yaml (e.g. console/).[/]");
+    AnsiConsole.MarkupLine("[bold red]✗ config.yaml not found at repo root.[/]");
+    AnsiConsole.MarkupLine($"[grey]Expected: {Markup.Escape(configPath)}[/]");
     return 1;
 }
 
 var configuration = new ConfigurationBuilder()
-    .SetBasePath(Directory.GetCurrentDirectory())
+    .SetBasePath(repoRoot)
     .AddYamlFile("config.yaml", optional: false)
     .Build();
 
@@ -40,10 +41,10 @@ if (!service.IsReady)
 
 AnsiConsole.MarkupLine($"[green]✓ Connected to {Markup.Escape(service.ConnectedOrgUriActual.ToString())}[/]");
 
-// ── 3. Output directory (pass as argument or defaults to ./Constants) ───────
+// ── 3. Output directory (pass as argument or defaults to ./constants) ───────
 var outputDir = args.Length > 0
     ? args[0]
-    : Path.Combine(Directory.GetCurrentDirectory(), "Constants");
+    : Path.Combine(repoRoot, "constants");
 
 Directory.CreateDirectory(outputDir);
 
@@ -96,3 +97,15 @@ static string ToPascalCase(string logicalName) =>
     string.Concat(logicalName.Split('_')
         .Where(p => p.Length > 0)
         .Select(p => char.ToUpperInvariant(p[0]) + p[1..]));
+
+static string FindRepoRoot(string startDir)
+{
+    var dir = new DirectoryInfo(startDir);
+    while (dir is not null)
+    {
+        if (File.Exists(Path.Combine(dir.FullName, "config.yaml")))
+            return dir.FullName;
+        dir = dir.Parent;
+    }
+    return startDir;
+}
