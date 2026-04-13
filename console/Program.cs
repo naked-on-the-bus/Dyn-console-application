@@ -1,12 +1,14 @@
 ﻿using Serilog;
 using Spectre.Console;
 using TemplateTool;
+using Microsoft.Xrm.Sdk;
+using Query;
 
 var (service, logger) = AppRunner.Connect();
 if (service is null) return;
 
 // ── Your business logic here ──────────────────────────────────────────────────
-AnsiConsole.Write("\n\nThis is your program\n\n");
+AnsiConsole.Write("\n\nStart\n\n");
 
 Log.CloseAndFlush();
 service.Dispose();
