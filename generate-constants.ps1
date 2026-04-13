@@ -11,6 +11,6 @@
 
 $scriptRoot   = $PSScriptRoot
 $constantsDir = Join-Path $scriptRoot "constants"
-$projectDir   = Join-Path $scriptRoot "scripts" "RetrieveConstants"
+$projectDir   = Join-Path (Join-Path $scriptRoot "scripts") "RetrieveConstants"
 
 dotnet run --project $projectDir -- $constantsDir
