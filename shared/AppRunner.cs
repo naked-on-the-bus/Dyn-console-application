@@ -3,7 +3,6 @@ namespace TemplateTool;
 using Microsoft.Extensions.Configuration;
 using Microsoft.PowerPlatform.Dataverse.Client;
 using Serilog;
-using Spectre.Console;
 
 public static class AppRunner
 {
@@ -33,31 +32,29 @@ public static class AppRunner
             .CreateLogger();
 
         // ── 4. Welcome Banner ────────────────────────────────────────────────────────
-        AnsiConsole.Write(new FigletText("Console Runner").Color(Color.Cyan1));
-        AnsiConsole.Write(
-            new Panel("[bold green]A template for console-application / By naked-on-the-bus[/]")
-                .Border(BoxBorder.Double)
-                .Padding(1, 0));
+        Ansi.WriteBanner("Console Runner");
+        Ansi.WriteBox(Ansi.BoldGreen("A template for console-application"));
+        Console.WriteLine();
 
         // ── 5. Connect ────────────────────────────────────────────────────────────────
         Log.Information("Connecting to {Url}...", dynamics["Url"]);
+        Console.WriteLine(Ansi.Gray($"Connecting to {dynamics["Url"]}..."));
         var service = new ServiceClient(connectionString);
 
         // ── 6. Verify Connection ─────────────────────────────────────────────────────
         if (!service.IsReady)
         {
             Log.Error("Connection failed: {Error}", service.LastError);
-            AnsiConsole.MarkupLine($"[bold red]✗ Connection failed:[/] {Markup.Escape(service.LastError)}");
+            Console.WriteLine(Ansi.Error($"Connection failed: {service.LastError}"));
             Log.CloseAndFlush();
             service.Dispose();
             return (null, Log.Logger);
         }
 
         Log.Information("Connected to {Url}", service.ConnectedOrgUriActual);
-        AnsiConsole.Write(
-            new Panel($"[bold green]✓ Connected to:[/] {Markup.Escape(service.ConnectedOrgUriActual.ToString())}")
-                .Border(BoxBorder.Rounded)
-                .Header("[green]Connection Status[/]"));
+        Ansi.WriteBox(
+            Ansi.Success($"Connected to: {service.ConnectedOrgUriActual}"),
+            "Connection Status");
 
         return (service, Log.Logger);
     }

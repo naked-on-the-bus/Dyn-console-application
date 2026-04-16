@@ -33,7 +33,6 @@ Dynamics-Templates/
 | NetEscapades.Configuration.Yaml | 3.1.0 | YAML config file support |
 | Serilog | 4.2.0 | Structured logging |
 | Serilog.Sinks.File | 6.0.0 | File log sink |
-| Spectre.Console | 0.49.1 | Terminal UI (banners, panels, status) |
 
 ---
 

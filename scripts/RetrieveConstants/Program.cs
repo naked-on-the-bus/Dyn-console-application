@@ -2,7 +2,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.PowerPlatform.Dataverse.Client;
 using Microsoft.Xrm.Sdk.Messages;
 using Microsoft.Xrm.Sdk.Metadata;
-using Spectre.Console;
 using System.Text;
 
 // ── 1. Locate config.yaml at repo root ──────────────────────────────────────
@@ -10,8 +9,8 @@ var repoRoot = FindRepoRoot(Directory.GetCurrentDirectory());
 var configPath = Path.Combine(repoRoot, "config.yaml");
 if (!File.Exists(configPath))
 {
-    AnsiConsole.MarkupLine("[bold red]✗ config.yaml not found at repo root.[/]");
-    AnsiConsole.MarkupLine($"[grey]Expected: {Markup.Escape(configPath)}[/]");
+    Console.Error.WriteLine($"\x1b[1m\x1b[91m✗ config.yaml not found at repo root.\x1b[0m");
+    Console.Error.WriteLine($"\x1b[90m  Expected: {configPath}\x1b[0m");
     return 1;
 }
 
@@ -28,18 +27,23 @@ var connectionString =
     $"LoginPrompt={dynamics["LoginPrompt"]};";
 
 // ── 2. Connect ──────────────────────────────────────────────────────────────
-AnsiConsole.Write(new FigletText("Retrieve Constants").Color(Color.Cyan1));
-AnsiConsole.MarkupLine($"[grey]Connecting to {Markup.Escape(dynamics["Url"]!)}...[/]");
+Console.WriteLine();
+var bar = new string('━', "Retrieve Constants".Length + 6);
+Console.WriteLine($"  \x1b[96m\x1b[1m{bar}\x1b[0m");
+Console.WriteLine($"  \x1b[96m\x1b[1m┃  \x1b[97mRetrieve Constants\x1b[96m  ┃\x1b[0m");
+Console.WriteLine($"  \x1b[96m\x1b[1m{bar}\x1b[0m");
+Console.WriteLine();
+Console.WriteLine($"\x1b[90mConnecting to {dynamics["Url"]}...\x1b[0m");
 
 using var service = new ServiceClient(connectionString);
 
 if (!service.IsReady)
 {
-    AnsiConsole.MarkupLine($"[bold red]✗ Connection failed:[/] {Markup.Escape(service.LastError)}");
+    Console.Error.WriteLine($"\x1b[1m\x1b[91m✗ Connection failed:\x1b[0m {service.LastError}");
     return 1;
 }
 
-AnsiConsole.MarkupLine($"[green]✓ Connected to {Markup.Escape(service.ConnectedOrgUriActual.ToString())}[/]");
+Console.WriteLine($"\x1b[92m✓ Connected to {service.ConnectedOrgUriActual}\x1b[0m");
 
 // ── 3. Output directory (pass as argument or defaults to ./constants) ───────
 var outputDir = args.Length > 0
@@ -49,13 +53,13 @@ var outputDir = args.Length > 0
 Directory.CreateDirectory(outputDir);
 
 // ── 4. Fetch metadata & generate classes ────────────────────────────────────
-AnsiConsole.Status().Start("Fetching entity metadata...", ctx =>
+Console.WriteLine($"\x1b[90mFetching entity metadata...\x1b[0m");
 {
     var response = (RetrieveAllEntitiesResponse)service.Execute(
         new RetrieveAllEntitiesRequest { EntityFilters = EntityFilters.Attributes });
 
     var entities = response.EntityMetadata;
-    ctx.Status($"Generating {entities.Length} classes...");
+    Console.WriteLine($"\x1b[90mGenerating {entities.Length} classes...\x1b[0m");
 
     var generated = 0;
     foreach (var entity in entities)
@@ -87,8 +91,8 @@ AnsiConsole.Status().Start("Fetching entity metadata...", ctx =>
         generated++;
     }
 
-    AnsiConsole.MarkupLine($"[green]✓ Generated {generated} constant classes in {Markup.Escape(outputDir)}[/]");
-});
+    Console.WriteLine($"\x1b[92m✓ Generated {generated} constant classes in {outputDir}\x1b[0m");
+}
 
 return 0;
 
