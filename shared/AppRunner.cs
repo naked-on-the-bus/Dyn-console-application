@@ -32,9 +32,11 @@ public static class AppRunner
             .CreateLogger();
 
         // ── 4. Welcome Banner ────────────────────────────────────────────────────────
+        Console.Clear();
         Ansi.WriteBanner("Console Runner");
-        Ansi.WriteBox(Ansi.BoldGreen("A template for console-application"));
+        Console.WriteLine(Ansi.BoldGreen("  A template for console-application"));
         Console.WriteLine();
+        Ansi.WriteDivider();
 
         // ── 5. Connect ────────────────────────────────────────────────────────────────
         Log.Information("Connecting to {Url}...", dynamics["Url"]);
@@ -52,9 +54,9 @@ public static class AppRunner
         }
 
         Log.Information("Connected to {Url}", service.ConnectedOrgUriActual);
-        Ansi.WriteBox(
-            Ansi.Success($"Connected to: {service.ConnectedOrgUriActual}"),
-            "Connection Status");
+        Console.WriteLine(Ansi.Success($"Connected to: {service.ConnectedOrgUriActual}"));
+        Console.WriteLine();
+        Ansi.WriteDivider();
 
         return (service, Log.Logger);
     }

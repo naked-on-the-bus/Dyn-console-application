@@ -38,58 +38,26 @@ public static class Ansi
     public static string DimGray(string text)    => $"{Dim}{FgGray}{text}{Reset}";
 
     // ── Semantic shortcuts ───────────────────────────────────────────────────
-    public static string Success(string text) => $"{Bold}{FgGreen}✓ {text}{Reset}";
-    public static string Error(string text)   => $"{Bold}{FgRed}✗ {text}{Reset}";
-    public static string Info(string text)    => $"{FgCyan}ℹ {text}{Reset}";
-    public static string Warn(string text)    => $"{FgYellow}⚠ {text}{Reset}";
+    public static string Success(string text) => $"{Bold}{FgGreen}+ {text}{Reset}";
+    public static string Error(string text)   => $"{Bold}{FgRed}x {text}{Reset}";
+    public static string Info(string text)    => $"{FgCyan}> {text}{Reset}";
+    public static string Warn(string text)    => $"{FgYellow}! {text}{Reset}";
 
-    // ── Box drawing ──────────────────────────────────────────────────────────
-    /// <summary>
-    /// Draws a rounded-corner box around a message.
-    /// Optionally shows a header label above the top border.
-    /// </summary>
-    public static void WriteBox(string message, string? header = null)
-    {
-        var lines   = message.Split('\n');
-        int inner   = lines.Max(l => l.Length);
-        int width   = Math.Max(inner, (header?.Length ?? 0) + 2) + 2;
-
-        string top    = $"╭{Repeat('─', width)}╮";
-        string bottom = $"╰{Repeat('─', width)}╯";
-
-        if (header is not null)
-        {
-            int pad = width - header.Length - 2;
-            top = $"╭─ {BoldCyan(header)} {Repeat('─', Math.Max(0, pad))}╮";
-        }
-
-        Console.WriteLine(top);
-        foreach (var line in lines)
-            Console.WriteLine($"│ {line.PadRight(width - 2)} │");
-        Console.WriteLine(bottom);
-    }
+    // ── Layout ───────────────────────────────────────────────────────────────
 
     /// <summary>
-    /// Prints a large block-letter banner for the application title.
-    /// Uses simple block characters — no external dependency.
+    /// Prints the application title in large, bold text with extra spacing.
     /// </summary>
     public static void WriteBanner(string title)
     {
         Console.WriteLine();
-        string bar = Repeat('━', title.Length + 6);
-        Console.WriteLine($"  {FgCyan}{Bold}{bar}{Reset}");
-        Console.WriteLine($"  {FgCyan}{Bold}┃  {FgWhite}{title}{FgCyan}  ┃{Reset}");
-        Console.WriteLine($"  {FgCyan}{Bold}{bar}{Reset}");
-        Console.WriteLine();
+        Console.WriteLine($"  {Bold}{FgCyan}{title.ToUpperInvariant()}{Reset}");
+        //Console.WriteLine($"  {FgCyan}{new string('-', title.Length)}{Reset}");
     }
 
     /// <summary>
-    /// Prints a horizontal divider line.
+    /// Prints a horizontal divider line using plain ASCII dashes.
     /// </summary>
     public static void WriteDivider(int length = 50)
-        => Console.WriteLine(DimGray(Repeat('─', length)));
-
-    // ── Internal ─────────────────────────────────────────────────────────────
-    private static string Repeat(char c, int count)
-        => new(c, Math.Max(0, count));
+        => Console.WriteLine(DimGray(new string('-', length)));
 }
