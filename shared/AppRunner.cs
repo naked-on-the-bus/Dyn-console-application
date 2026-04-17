@@ -55,7 +55,6 @@ public static class AppRunner
 
         Log.Information("Connected to {Url}", service.ConnectedOrgUriActual);
         Console.WriteLine(Ansi.Success($"Connected to: {service.ConnectedOrgUriActual}"));
-        Console.WriteLine();
         Ansi.WriteDivider();
 
         return (service, Log.Logger);
